@@ -44,4 +44,8 @@ Controls.propTypes = {
   balance: PropTypes.number,
 }
 
+Controls.defaultProps = {
+  balance: 0,
+}
+
 export default Controls;
