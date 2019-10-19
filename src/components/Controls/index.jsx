@@ -10,30 +10,29 @@ const Controls = ({ onDeposit, onWithdraw, balance }) => {
       balance: balance,
   }
 
-  const showMsg = (msg) => toast(msg, {
-    className: 'toast'
-  });
+  const showMsg = (msg) => toast.error(msg);
   
-  const handleDeposit = () => {
-    if (state.balance < state.amount) return showMsg("На счету недостаточно средств для проведения операции!");
-    if (!state.amount || state.amount < 0) return showMsg('Введите сумму для проведения операции!');
-    onDeposit(state.amount);
+  const handleQuery = ({ target }) => {
+    const { amount } = state;
+    if (!amount || amount <= 0) return showMsg('Введите сумму для проведения операции!');
+    if (target.name === "deposit") {
+      if (state.balance < amount) return showMsg("На счету недостаточно средств для проведения операции!");
+      onDeposit(+amount.replace(/^0+/, ''));
+    }
+    if (target.name === "withdraw") onWithdraw(+amount.replace(/^0+/, ''));
+    target.parentNode.querySelector('[name="amount"]').value = 0;
   };
 
-  const handleWithdraw = () => {
-    if (!state.amount || state.amount < 0) return showMsg('Введите сумму для проведения операции!');
-    onWithdraw(state.amount);
-  };
 
-  const handleSetAmount = (evt) => {
-    state[evt.target.name] = evt.target.value;
+  const handleSetAmount = ({target}) => {
+    state[target.name] = target.value;
   };
 
   return(
     <section className={css.controls}>
-      <input type="number" name="amount" onChange={handleSetAmount}/>
-      <button type="button" onClick={handleDeposit}>Deposit</button>
-      <button type="button" onClick={handleWithdraw}>Withdraw</button>
+      <input type="number" placeholder="Введите сумму" name="amount" onChange={handleSetAmount}/>
+      <button type="button" name="deposit" onClick={handleQuery}>Deposit</button>
+      <button type="button" name='withdraw' onClick={handleQuery}>Withdraw</button>
     </section>
   )  
 }

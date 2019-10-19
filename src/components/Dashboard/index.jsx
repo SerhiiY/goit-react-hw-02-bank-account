@@ -5,7 +5,7 @@ import Controls from '../Controls';
 import Balance from '../Balance';
 import TransactionHistory from '../TransactionHistory';
 
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import css from './style.module.css';
@@ -25,14 +25,34 @@ class Dashboard extends Component {
     balance: 5000,
   }
 
+  componentDidMount() {
+    const savedTransactionList = localStorage.getItem('transactions'),
+      savedBalance = localStorage.getItem('balance');
+
+    if (savedTransactionList && savedBalance) {
+      this.setState({
+        transactions: JSON.parse(savedTransactionList),
+        balance: +savedBalance
+      });
+    }
+  }
+
+  componentDidUpdate() {
+    const { transactions, balance } = this.state;
+    localStorage.setItem('transactions', JSON.stringify(transactions));
+    localStorage.setItem('balance', balance);
+  }
+
   onDeposit(amount) {
     this.newTransaction(amount, 'deposit');
     this.setState(prevState => ({ balance: prevState.balance - +amount }));
+    toast.success("Операция успешна!");
   }
 
   onWithdraw(amount) {
     this.newTransaction(amount, 'withdrawal');
     this.setState(prevState => ({ balance: prevState.balance + +amount }));
+    toast.success("Операция успешна!");
   }
 
   newTransaction(amount, type) {
@@ -63,13 +83,14 @@ class Dashboard extends Component {
   render() {
 
     const income = this.calcIncome(),
-      expences = this.calcExpences();
+      expences = this.calcExpences(),
+      { balance, transactions } = this.state;
     
     return (
       <div className={css.dashboard}>
-        <Controls onDeposit={this.onDeposit} onWithdraw={this.onWithdraw} balance={this.state.balance} />
-        <Balance balance={this.state.balance} income={income} expences={expences}/>
-        <TransactionHistory items={this.state.transactions} />
+        <Controls onDeposit={this.onDeposit} onWithdraw={this.onWithdraw} balance={balance} />
+        <Balance balance={balance} income={income} expences={expences}/>
+        <TransactionHistory items={transactions} />
         <ToastContainer
           position="bottom-right"
           autoClose={3000}
