@@ -22,7 +22,7 @@ class Dashboard extends Component {
 
   state = {
     transactions: [],
-    balance: 5000,
+    balance: 0,
   }
 
   componentDidMount() {
