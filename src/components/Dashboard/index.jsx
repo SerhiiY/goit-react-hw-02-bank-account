@@ -25,24 +25,6 @@ class Dashboard extends Component {
     balance: 0,
   }
 
-  componentDidMount() {
-    const savedTransactionList = localStorage.getItem('transactions'),
-      savedBalance = localStorage.getItem('balance');
-
-    if (savedTransactionList && savedBalance) {
-      this.setState({
-        transactions: JSON.parse(savedTransactionList),
-        balance: +savedBalance
-      });
-    }
-  }
-
-  componentDidUpdate() {
-    const { transactions, balance } = this.state;
-    localStorage.setItem('transactions', JSON.stringify(transactions));
-    localStorage.setItem('balance', balance);
-  }
-
   onDeposit(amount) {
     this.newTransaction(amount, 'deposit');
     this.setState(prevState => ({ balance: prevState.balance + +amount }));
