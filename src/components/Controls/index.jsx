@@ -20,7 +20,7 @@ const Controls = ({ onDeposit, onWithdraw, balance }) => {
       onWithdraw(+amount.replace(/^0+/, ''));
     }
     if (target.name === "deposit") onDeposit(+amount.replace(/^0+/, ''));
-    target.parentNode.querySelector('[name="amount"]').value = 0;
+    target.parentNode.querySelector('[name="amount"]').value = '';
   };
 
 
