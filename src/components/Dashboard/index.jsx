@@ -11,33 +11,25 @@ import 'react-toastify/dist/ReactToastify.css';
 import css from './style.module.css';
 
 class Dashboard extends Component {
-  constructor() {
-    super();
-    this.onDeposit = this.onDeposit.bind(this);
-    this.onWithdraw = this.onWithdraw.bind(this);
-    this.newTransaction = this.newTransaction.bind(this);
-    this.calcIncome = this.calcIncome.bind(this);
-    this.calcExpences = this.calcExpences.bind(this);
-  }
 
   state = {
     transactions: [],
     balance: 0,
   }
 
-  onDeposit(amount) {
+  onDeposit = (amount) => {
     this.newTransaction(amount, 'deposit');
     this.setState(prevState => ({ balance: prevState.balance + +amount }));
     toast.success("Операция успешна!");
   }
 
-  onWithdraw(amount) {
+  onWithdraw = (amount) => {
     this.newTransaction(amount, 'withdrawal');
     this.setState(prevState => ({ balance: prevState.balance - +amount }));
     toast.success("Операция успешна!");
   }
 
-  newTransaction(amount, type) {
+  newTransaction = (amount, type) => {
     const date = new Date();
 
     const transaction = {
@@ -50,28 +42,20 @@ class Dashboard extends Component {
     this.setState(prevState => ({ transactions: [...prevState.transactions, transaction] }));
   }
 
-  calcIncome() {
-    const filteredArr = this.state.transactions.filter(el => el.type === "deposit"),
-      sum = filteredArr.reduce((acc, el) => acc + +el.amount, 0);
-    return sum;
-  }
-
-  calcExpences() {
-    const filteredArr = this.state.transactions.filter(el => el.type === "withdrawal"),
+  calc = (transactionType) => {
+    const filteredArr = this.state.transactions.filter(el => el.type === transactionType),
       sum = filteredArr.reduce((acc, el) => acc + +el.amount, 0);
     return sum;
   }
 
   render() {
 
-    const income = this.calcIncome(),
-      expences = this.calcExpences(),
-      { balance, transactions } = this.state;
+    const { balance, transactions } = this.state;
     
     return (
       <div className={css.dashboard}>
         <Controls onDeposit={this.onDeposit} onWithdraw={this.onWithdraw} balance={balance} />
-        <Balance balance={balance} income={income} expences={expences}/>
+        <Balance balance={balance} income={this.calc("deposit")} expences={this.calc("withdrawal")}/>
         <TransactionHistory items={transactions} />
         <ToastContainer
           position="bottom-right"
