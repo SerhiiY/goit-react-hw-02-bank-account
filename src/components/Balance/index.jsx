@@ -2,8 +2,7 @@ import React from 'react';
 import css from './style.module.css';
 import PropTypes from 'prop-types';
 
-const Balance = ({ balance, income, expences}) => { 
-  return (
+const Balance = ({ balance, income, expences}) => (
     <section className={css.balance}>
       <span>⬆{income}$</span>
       <span>⬇{expences}$</span>
@@ -11,7 +10,6 @@ const Balance = ({ balance, income, expences}) => {
     </section>
 
   )
-}
 
 Balance.propTypes = {
   balance: PropTypes.number,

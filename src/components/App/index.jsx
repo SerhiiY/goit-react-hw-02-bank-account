@@ -1,11 +1,8 @@
 import React from 'react';
 import Dashboard from '../Dashboard';
 
-const App = () => {
-
-    return (
+const App = () =>  (
       <Dashboard/>
-    )
-}
+  )
 
 export default App;
